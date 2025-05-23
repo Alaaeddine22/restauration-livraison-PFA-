@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panneau Admin - Gestion</title>
+  <link href="css/main.css" rel="stylesheet">
+  <link href="assets/css/admin.css" rel="stylesheet"> <!-- Lien vers le nouveau CSS -->
+</head>
+
+<body>
+  <div class="admin-container">
+    <h2>Panneau Admin - Gestion</h2>
+
+    <!-- Section pour afficher les utilisateurs -->
+    <h3>Utilisateurs</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom d'utilisateur</th>
+          <th>Mot de passe</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="userTable">
+        <!-- User data will be dynamically inserted here -->
+      </tbody>
+    </table>
+
+    <!-- Section pour afficher les réservations -->
+    <h3>Réservations</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Date</th>
+          <th>Heure</th>
+          <th>Nombre de personnes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="reservationTable">
+        <!-- Reservation data will be dynamically inserted here -->
+      </tbody>
+    </table>
+
+    <!-- Section pour afficher le dernier message de contact -->
+    <h3>Dernier Message de Contact</h3>
+    <div id="lastMessage"></div>
+
+    <!-- Section pour gérer les chefs -->
+    <h3>Chefs</h3>
+    <form id="chefForm">
+      <div class="form-group">
+        <label for="chefName">Nom</label>
+        <input type="text" id="chefName" required>
+      </div>
+      <div class="form-group">
+        <label for="chefSurname">Prénom</label>
+        <input type="text" id="chefSurname" required>
+      </div>
+      <div class="form-group">
+        <label for="chefAge">Âge</label>
+        <input type="number" id="chefAge" required>
+      </div>
+      <div class="form-group">
+        <label for="chefSalary">Salaire</label>
+        <input type="number" id="chefSalary" required>
+      </div>
+      <button type="submit">Ajouter Chef</button>
+    </form>
+
+    <!-- Section pour afficher les chefs -->
+    <h3>Liste des Chefs</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Âge</th>
+          <th>Salaire</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="chefTable">
+        <!-- Chef data will be dynamically inserted here -->
+      </tbody>
+    </table>
+
+    <!-- Section pour gérer les clients VIP -->
+    <h3>Clients VIP</h3>
+    <form id="vipForm">
+      <div class="form-group">
+        <label for="vipName">Nom</label>
+        <input type="text" id="vipName" required>
+      </div>
+      <div class="form-group">
+        <label for="vipSurname">Prénom</label>
+        <input type="text" id="vipSurname" required>
+      </div>
+      <div class="form-group">
+        <label for="vipBadge">Badge VIP</label>
+        <input type="text" id="vipBadge" required>
+      </div>
+      <button type="submit">Ajouter Client VIP</button>
+    </form>
+
+    <!-- Section pour afficher les clients VIP -->
+    <h3>Liste des Clients VIP</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Badge VIP</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="vipTable">
+        <!-- VIP data will be dynamically inserted here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Fetch users from localStorage
+    const users = JSON.parse(localStorage.getItem('users')) || {};
+    const userTable = document.getElementById('userTable');
+
+    // Populate the user table
+    function populateUserTable() {
+      userTable.innerHTML = ''; // Clear existing rows
+      for (const [username, password] of Object.entries(users)) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${username}</td>
+          <td>${password}</td>
+          <td>
+            <button onclick="editUser('${username}')">Modifier</button>
+            <button onclick="deleteUser('${username}')">Supprimer</button>
+          </td>
+        `;
+        userTable.appendChild(row);
+      }
+    }
+
+    populateUserTable();
+
+    // Example reservations data
+    const reservations = JSON.parse(localStorage.getItem('reservations')) || [];
+    const reservationTable = document.getElementById('reservationTable');
+
+    // Populate the reservation table
+    function populateReservationTable() {
+      reservationTable.innerHTML = ''; // Clear existing rows
+      reservations.forEach((reservation, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${reservation.name}</td>
+          <td>${reservation.date}</td>
+          <td>${reservation.time}</td>
+          <td>${reservation.people}</td>
+          <td>
+            <button onclick="editReservation(${index})">Modifier</button>
+            <button onclick="deleteReservation(${index})">Supprimer</button>
+          </td>
+        `;
+        reservationTable.appendChild(row);
+      });
+    }
+
+    populateReservationTable();
+
+    // Display the last contact message
+    const lastMessage = JSON.parse(localStorage.getItem('lastMessage'));
+
+    if (lastMessage) {
+      const lastMessageDiv = document.getElementById('lastMessage');
+      lastMessageDiv.innerHTML = `
+        <p><strong>Nom:</strong> ${lastMessage.name}</p>
+        <p><strong>Email:</strong> ${lastMessage.email}</p>
+        <p><strong>Sujet:</strong> ${lastMessage.subject}</p>
+        <p><strong>Message:</strong> ${lastMessage.message}</p>
+      `;
+    } else {
+      document.getElementById('lastMessage').innerHTML = '<p>Aucun message de contact trouvé.</p>';
+    }
+
+    // Manage chefs
+    const chefs = JSON.parse(localStorage.getItem('chefs')) || [];
+    const chefTable = document.getElementById('chefTable');
+
+    // Populate the chef table
+    function populateChefTable() {
+      chefTable.innerHTML = ''; // Clear existing rows
+      chefs.forEach((chef, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${chef.name}</td>
+          <td>${chef.surname}</td>
+          <td>${chef.age}</td>
+          <td>${chef.salary}</td>
+          <td>
+            <button onclick="editChef(${index})">Modifier</button>
+            <button onclick="deleteChef(${index})">Supprimer</button>
+          </td>
+        `;
+        chefTable.appendChild(row);
+      });
+    }
+
+    populateChefTable();
+
+    // Handle chef form submission
+    document.getElementById('chefForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const chefName = document.getElementById('chefName').value;
+      const chefSurname = document.getElementById('chefSurname').value;
+      const chefAge = document.getElementById('chefAge').value;
+      const chefSalary = document.getElementById('chefSalary').value;
+
+      const newChef = { name: chefName, surname: chefSurname, age: chefAge, salary: chefSalary };
+      chefs.push(newChef);
+      localStorage.setItem('chefs', JSON.stringify(chefs));
+      populateChefTable(); // Refresh table
+
+      // Clear form fields
+      document.getElementById('chefForm').reset();
+    });
+
+    // Handle VIP form submission
+    const vips = JSON.parse(localStorage.getItem('vips')) || [];
+    const vipTable = document.getElementById('vipTable');
+
+    // Populate the VIP table
+    function populateVipTable() {
+      vipTable.innerHTML = ''; // Clear existing rows
+      vips.forEach((vip, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${vip.name}</td>
+          <td>${vip.surname}</td>
+          <td>${vip.badge}</td>
+          <td>
+            <button onclick="editVip(${index})">Modifier</button>
+            <button onclick="deleteVip(${index})">Supprimer</button>
+          </td>
+        `;
+        vipTable.appendChild(row);
+      });
+    }
+
+    populateVipTable();
+
+    document.getElementById('vipForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const vipName = document.getElementById('vipName').value;
+      const vipSurname = document.getElementById('vipSurname').value;
+      const vipBadge = document.getElementById('vipBadge').value;
+
+      const newVip = { name: vipName, surname: vipSurname, badge: vipBadge };
+      vips.push(newVip);
+      localStorage.setItem('vips', JSON.stringify(vips));
+      populateVipTable(); // Refresh table
+
+      // Clear form fields
+      document.getElementById('vipForm').reset();
+    });
+
+    // Check if the logged-in user is admin
+    const loggedInUser = localStorage.getItem('loggedInUser');
+
+    if (loggedInUser !== 'admin') {
+      alert('Accès refusé : Seul l\'admin peut voir cette page.');
+      window.location.href = 'login.html'; // Rediriger vers la page de connexion
+    }
+
+    // Pour les utilisateurs par défaut
+    if (!localStorage.getItem('users')) {
+      const defaultUsers = {
+        'admin': 'admin123', // Identifiants admin
+        'user1': 'password123'
+      };
+      localStorage.setItem('users', JSON.stringify(defaultUsers));
+    }
+
+    // Functions for editing and deleting
+    function editUser(username) {
+      const newPassword = prompt("Entrez le nouveau mot de passe pour " + username);
+      if (newPassword) {
+        users[username] = newPassword;
+        localStorage.setItem('users', JSON.stringify(users));
+        populateUserTable(); // Refresh table
+      }
+    }
+
+    function deleteUser(username) {
+      if (confirm("Êtes-vous sûr de vouloir supprimer l'utilisateur " + username + "?")) {
+        delete users[username];
+        localStorage.setItem('users', JSON.stringify(users));
+        populateUserTable(); // Refresh table
+      }
+    }
+
+    function editReservation(index) {
+      const reservation = reservations[index];
+      const newName = prompt("Modifier le nom:", reservation.name);
+      if (newName) {
+        reservation.name = newName;
+        const newDate = prompt("Modifier la date:", reservation.date);
+        if (newDate) {
+          reservation.date = newDate;
+          const newTime = prompt("Modifier l'heure:", reservation.time);
+          if (newTime) {
+            reservation.time = newTime;
+            const newPeople = prompt("Modifier le nombre de personnes:", reservation.people);
+            if (newPeople) {
+              reservation.people = newPeople;
+              localStorage.setItem('reservations', JSON.stringify(reservations));
+              populateReservationTable(); // Refresh table
+            }
+          }
+        }
+      }
+    }
+
+    function deleteReservation(index) {
+      if (confirm("Êtes-vous sûr de vouloir supprimer cette réservation ?")) {
+        reservations.splice(index, 1);
+        localStorage.setItem('reservations', JSON.stringify(reservations));
+        populateReservationTable(); // Refresh table
+      }
+    }
+
+    function editChef(index) {
+      const chef = chefs[index];
+      const newName = prompt("Modifier le nom:", chef.name);
+      if (newName) {
+        chef.name = newName;
+        const newSurname = prompt("Modifier le prénom:", chef.surname);
+        if (newSurname) {
+          chef.surname = newSurname;
+          const newAge = prompt("Modifier l'âge:", chef.age);
+          if (newAge) {
+            chef.age = newAge;
+            const newSalary = prompt("Modifier le salaire:", chef.salary);
+            if (newSalary) {
+              chef.salary = newSalary;
+              localStorage.setItem('chefs', JSON.stringify(chefs));
+              populateChefTable(); // Refresh table
+            }
+          }
+        }
+      }
+    }
+
+    function deleteChef(index) {
+      if (confirm("Êtes-vous sûr de vouloir supprimer ce chef ?")) {
+        chefs.splice(index, 1);
+        localStorage.setItem('chefs', JSON.stringify(chefs));
+        populateChefTable(); // Refresh table
+      }
+    }
+
+    function editVip(index) {
+      const vip = vips[index];
+      const newName = prompt("Modifier le nom:", vip.name);
+      if (newName) {
+        vip.name = newName;
+        const newSurname = prompt("Modifier le prénom:", vip.surname);
+        if (newSurname) {
+          vip.surname = newSurname;
+          const newBadge = prompt("Modifier le badge VIP:", vip.badge);
+          if (newBadge) {
+            vip.badge = newBadge;
+            localStorage.setItem('vips', JSON.stringify(vips));
+            populateVipTable(); // Refresh table
+          }
+        }
+      }
+    }
+
+    function deleteVip(index) {
+      if (confirm("Êtes-vous sûr de vouloir supprimer ce client VIP ?")) {
+        vips.splice(index, 1);
+        localStorage.setItem('vips', JSON.stringify(vips));
+        populateVipTable(); // Refresh table
+      }
+    }
+  </script>
+</body>
+
+</html>

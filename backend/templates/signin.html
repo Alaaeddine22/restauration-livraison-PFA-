@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Inscription - Yummy</title>
+  <link href="css/signin.css" rel="stylesheet">
+  <link href="css/main.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <div class="signin-container">
+    <h2>Inscription</h2>
+    <form id="signinForm">
+      <div class="form-group">
+        <label for="new-username">Nom d'utilisateur</label>
+        <input type="text" id="new-username" name="new-username" required>
+      </div>
+      <div class="form-group">
+        <label for="new-password">Mot de passe</label>
+        <input type="password" id="new-password" name="new-password" required>
+      </div>
+      <button type="submit">S'inscrire</button>
+      <p class="login-link">Vous avez déjà un compte? <a href="login.html">Connectez-vous ici</a>.</p>
+      <p id="error-message" style="color:red;"></p>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('signinForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent default form submission
+
+      const newUsername = document.getElementById('new-username').value;
+      const newPassword = document.getElementById('new-password').value;
+
+      // Fetch users from localStorage
+      const users = JSON.parse(localStorage.getItem('users')) || {};
+
+      // Check if the user already exists
+      if (users[newUsername]) {
+        document.getElementById('error-message').innerText = "Nom d'utilisateur déjà existant.";
+      } else {
+        users[newUsername] = newPassword; // Add new user
+        localStorage.setItem('users', JSON.stringify(users)); // Save updated users in localStorage
+        alert("Inscription réussie!");
+        window.location.href = 'login.html'; // Redirect to login page
+      }
+    });
+  </script>
+
+</body>
+
+</html>

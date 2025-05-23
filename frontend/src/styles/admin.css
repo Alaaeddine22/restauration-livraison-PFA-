@@ -1,0 +1,273 @@
+/* Modern Admin Dashboard Styles */
+:root {
+  --admin-primary: #4361ee;
+  --admin-secondary: #3f37c9;
+  --admin-success: #0bb783;
+  --admin-info: #2b9efa;
+  --admin-warning: #f9a825;
+  --admin-danger: #f64e60;
+  --admin-light: #f8f9fb;
+  --admin-dark: #212234;
+  --admin-gray: #7e8299;
+  --admin-card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --admin-hover-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+  --admin-sidebar-width: 280px;
+  --admin-header-height: 70px;
+  --admin-border-radius: 0.75rem;
+  --admin-transition: all 0.25s ease;
+}
+
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--admin-light);
+  position: relative;
+}
+
+.dashboard-content {
+  flex: 1;
+  padding-left: var(--admin-sidebar-width);
+  transition: var(--admin-transition);
+}
+
+.dashboard-header {
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-card {
+  background: white;
+  border-radius: var(--admin-border-radius);
+  box-shadow: var(--admin-card-shadow);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border: none;
+  transition: var(--admin-transition);
+}
+
+.dashboard-card:hover {
+  box-shadow: var(--admin-hover-shadow);
+}
+
+/* Modern Dashboard Stat Cards */
+.dashboard-stat-card {
+  display: flex;
+  background-color: white;
+  border-radius: var(--admin-border-radius);
+  box-shadow: var(--admin-card-shadow);
+  padding: 1.5rem;
+  transition: var(--admin-transition);
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-left: 4px solid transparent;
+}
+
+.dashboard-stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--admin-hover-shadow);
+}
+
+.stat-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  margin-right: 20px;
+  color: white;
+  position: relative;
+}
+
+.stat-icon::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  opacity: 0.2;
+  border-radius: inherit;
+  transform: scale(1.4);
+  z-index: -1;
+}
+
+.stat-content {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.stat-title {
+  font-size: 0.9rem;
+  color: var(--admin-gray);
+  margin-bottom: 5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 2.1rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: var(--admin-dark);
+  line-height: 1.1;
+}
+
+.stat-desc {
+  font-size: 0.85rem;
+  color: var(--admin-gray);
+  display: flex;
+  align-items: center;
+}
+
+.stat-desc i {
+  margin-right: 5px;
+}
+
+.stat-trend-up {
+  color: var(--admin-success);
+}
+
+.stat-trend-down {
+  color: var(--admin-danger);
+}
+
+.stat-primary {
+  border-left-color: var(--admin-primary);
+}
+.stat-warning {
+  border-left-color: var(--admin-warning);
+}
+.stat-success {
+  border-left-color: var(--admin-success);
+}
+.stat-danger {
+  border-left-color: var(--admin-danger);
+}
+.stat-info {
+  border-left-color: var(--admin-info);
+}
+
+.stat-primary .stat-icon {
+  background-color: var(--admin-primary);
+}
+.stat-warning .stat-icon {
+  background-color: var(--admin-warning);
+}
+.stat-success .stat-icon {
+  background-color: var(--admin-success);
+}
+.stat-danger .stat-icon {
+  background-color: var(--admin-danger);
+}
+.stat-info .stat-icon {
+  background-color: var(--admin-info);
+}
+
+/* Notification Styles */
+.notification-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: white;
+}
+
+/* Modern Admin Sidebar */
+.dashboard-sidebar {
+  width: var(--admin-sidebar-width);
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: white;
+  box-shadow: var(--admin-card-shadow);
+  z-index: 1000;
+  transition: var(--admin-transition);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(0,0,0,0.04);
+}
+
+.sidebar-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sidebar-header h4 {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: var(--admin-dark);
+  font-size: 1.4rem;
+}
+
+.sidebar-header p {
+  font-size: 0.85rem;
+  color: var(--admin-gray);
+}
+
+.sidebar-menu {
+  padding: 1.5rem 1rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sidebar-menu button {
+  width: 100%;
+  text-align: left;
+  padding: 0.9rem 1.2rem;
+  margin-bottom: 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--admin-dark);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  border-radius: 0.75rem;
+  transition: var(--admin-transition);
+}
+
+.sidebar-menu button i {
+  margin-right: 0.9rem;
+  font-size: 1.1rem;
+  min-width: 24px;
+  text-align: center;
+}
+
+.sidebar-menu button:hover {
+  background-color: rgba(67, 97, 238, 0.06);
+  color: var(--admin-primary);
+}
+
+.sidebar-menu button.active {
+  background-color: var(--admin-primary);
+  color: white;
+  box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+}
+
+.sidebar-menu button.active i {
+  color: white;
+}
+
+/* Admin Info Box on Login Page */
+.admin-info {
+  background-color: rgba(0,0,0,0.03);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+/* Chart Card */
+.chart-card {
+  height: 100%;
+}

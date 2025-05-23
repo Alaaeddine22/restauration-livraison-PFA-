@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Connexion - Yummy</title>
+  <link href="css/main.css" rel="stylesheet">
+  <link href="css/login.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <div class="login-container">
+    <h2>Connexion</h2>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit">Se connecter</button>
+      <p class="register-link">Vous n'avez pas de compte? <a href="signin.html">Inscrivez-vous ici</a>.</p>
+
+      <p id="error-message" style="color:red;"></p>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent default form submission
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Fetch users from localStorage
+      const users = JSON.parse(localStorage.getItem('users')) || {};
+
+      // Verify login credentials
+      if (users[username] && users[username] === password) {
+        localStorage.setItem('loggedInUser', username); // Store logged-in user
+        window.location.href = 'index.html'; // Redirect to the starter page
+      } else {
+        document.getElementById('error-message').innerText = "Nom d'utilisateur ou mot de passe incorrect.";
+      }
+    });
+    if (!localStorage.getItem('users')) {
+  const defaultUsers = {
+    'admin': 'admin123', // Admin credentials
+    'user1': 'password123'
+  };
+  localStorage.setItem('users', JSON.stringify(defaultUsers));
+}
+
+  </script>
+
+</body>
+
+</html>
